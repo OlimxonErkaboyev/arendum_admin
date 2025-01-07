@@ -2,7 +2,6 @@
 import { Form, Input, message, Modal, Select, TreeSelect } from "antd";
 import { FC, useEffect, useState } from "react";
 import useUser from "../../../../hooks/user/useUser";
-import useFacility from "../../../../hooks/facility/useFacility.jsx";
 import useRegion from "../../../../hooks/region/useRegion.jsx";
 import { copyText } from "../../../../utils/index";
 import { CopyOutlined } from "@ant-design/icons";
@@ -34,7 +33,6 @@ const UserCreateModal: FC<UserCreateModalProps> = ({
     permissions,
   } = useUser();
   const { regions, getRegions } = useRegion();
-  const { facilties, getFacilities } = useFacility();
   const { user } = useAuth();
 
   const [login, setLogin] = useState("");
@@ -42,9 +40,9 @@ const UserCreateModal: FC<UserCreateModalProps> = ({
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [value, setValue] = useState<string>();
+  console.log(selectedRegion)
 
   useEffect(() => {
-    getFacilities({ pageNumber: 1, pageSize: 20 });
     getRegions();
     getRoles();
     getPermissions();
@@ -265,38 +263,38 @@ const UserCreateModal: FC<UserCreateModalProps> = ({
         />
       ),
     },
-    {
-      label: "Объект",
-      name: "facilityId",
-      required: true,
-      message: "Заполните",
-      child: (
-        <Select
-          showSearch
-          allowClear
-          loading={createLoading}
-          disabled={createLoading}
-          filterOption={(inputValue, option: { label: string }) =>
-            option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
-          }
-          options={
-            selectedRegion
-              ? regions
-                  .find((item) => item.id === selectedRegion)
-                  ?.facilities?.map((facility) => ({
-                    value: facility.id,
-                    label: facility.facilityNameRU,
-                  }))
-              : facilties &&
-                facilties?.map((facility) => ({
-                  value: facility.id,
-                  label: facility.facilityNameRU,
-                }))
-          }
-          onChange={(e) => form.setFieldValue("facilityId", e)}
-        />
-      ),
-    },
+    // {
+    //   label: "Объект",
+    //   name: "facilityId",
+    //   required: true,
+    //   message: "Заполните",
+    //   child: (
+    //     <Select
+    //       showSearch
+    //       allowClear
+    //       loading={createLoading}
+    //       disabled={createLoading}
+    //       filterOption={(inputValue, option: { label: string }) =>
+    //         option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
+    //       }
+    //       options={
+    //         selectedRegion
+    //           ? regions
+    //               .find((item) => item.id === selectedRegion)
+    //               ?.facilities?.map((facility) => ({
+    //                 value: facility.id,
+    //                 label: facility.facilityNameRU,
+    //               }))
+    //           : facilties &&
+    //             facilties?.map((facility) => ({
+    //               value: facility.id,
+    //               label: facility.facilityNameRU,
+    //             }))
+    //       }
+    //       onChange={(e) => form.setFieldValue("facilityId", e)}
+    //     />
+    //   ),
+    // },
     {
       label: "Доступы",
       name: "permissions",

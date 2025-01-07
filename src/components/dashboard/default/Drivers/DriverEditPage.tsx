@@ -5,7 +5,6 @@ import {
   Form,
   Input,
   message,
-  Popconfirm,
   Radio,
   Row,
   Select,
@@ -14,12 +13,8 @@ import {
 } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { equipmentTypes, regions, users } from "../../../../constants/index.js";
-import {
-  DeleteOutlined,
-  SaveOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { equipmentTypes, regions } from "../../../../constants/index.js";
+import { UploadOutlined } from "@ant-design/icons";
 import useDrivers from "../../../../hooks/drivers/useDrivers.jsx";
 
 interface UploadFile {
@@ -40,10 +35,11 @@ const DriverEditPage: FC = () => {
   const [form] = Form.useForm();
   const { uploadImg, getDetail, detail } = useDrivers();
   const [isLegalPerson, setIsLegalPerson] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesType>({});
   const [fileList, setFileList] = useState<Record<string, UploadFile[]>>({});
   const detailLoading = false;
-
+  console.log(uploadedFiles);
   const handleFileUpload = async (file, name) => {
     const formData = new FormData();
     if (file) {
@@ -89,7 +85,7 @@ const DriverEditPage: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  console.log(detail)
+  console.log(detail);
 
   useEffect(() => {
     if (form && detail) {
