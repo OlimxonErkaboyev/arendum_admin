@@ -61,6 +61,21 @@ export {
   USER_PROFILE_ITEMS,
 };
 
+export const PricingTypes = [
+  {
+    name: "Бесплатные минуты ожидания",
+    value: "waiting_time",
+  },
+  {
+    name: "Стоимость минуты ожидания",
+    value: "waiting_amount",
+  },
+  {
+    name: "Бесплатные минуты ожидания",
+    value: "fine_payment",
+  },
+];
+
 export const Tranzactions = [
   {
     id: 1,

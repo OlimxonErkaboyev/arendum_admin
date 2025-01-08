@@ -50,7 +50,7 @@ const Pricing: FC = () => {
           </Form.Item>
           <Form.Item
             label="Укажите тип техники данного тарифа"
-            name="equipmentType"
+            name="machineId"
             rules={[{ required: true, message: "Выберите тип техники" }]}
           >
             <Select
@@ -100,19 +100,14 @@ const Pricing: FC = () => {
                     </Col>
                     <Col>
                       <Form.Item
-                        name="hourCount"
+                        name="min_amount"
                         rules={[{ required: true, message: "Введите число" }]}
                       >
                         <Input type="number" placeholder="Укажите число" />
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item name="currencyKm" initialValue="UZS/km">
-                        <Select style={{ width: "100%" }}>
-                          <Option value="UZS/hour">UZS/hour</Option>
-                          <Option value="UZS/km">UZS/km</Option>
-                        </Select>
-                      </Form.Item>
+                      <Button type="primary">UZS</Button>
                     </Col>
                   </Row>
                 </>
@@ -134,19 +129,14 @@ const Pricing: FC = () => {
                     </Col>
                     <Col>
                       <Form.Item
-                        name="firstCount"
+                        name="min_amount"
                         rules={[{ required: true, message: "Введите число" }]}
                       >
                         <Input type="number" placeholder="Укажите число" />
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item name="currencyHour" initialValue="UZS/hour">
-                        <Select style={{ width: "100%" }}>
-                          <Option value="UZS/hour">UZS/hour</Option>
-                          <Option value="USD/hour">USD/hour</Option>
-                        </Select>
-                      </Form.Item>
+                      <Button type="primary">UZS</Button>
                     </Col>
                   </Row>
                   <Typography.Text
@@ -163,19 +153,14 @@ const Pricing: FC = () => {
                     </Col>
                     <Col>
                       <Form.Item
-                        name="minCount"
+                        name="min_waiting_time"
                         rules={[{ required: true, message: "Введите число" }]}
                       >
                         <Input placeholder="Укажите число" />
                       </Form.Item>
                     </Col>
                     <Col>
-                      <Form.Item name="currencyMin" initialValue="UZS/hour">
-                        <Select style={{ width: "100%" }}>
-                          <Option value="UZS/hour">UZS/hour</Option>
-                          <Option value="USD/hour">USD/hour</Option>
-                        </Select>
-                      </Form.Item>
+                      <Button type="primary">ЧАС</Button>
                     </Col>
                   </Row>
                 </>
@@ -193,15 +178,21 @@ const Pricing: FC = () => {
               {
                 parameterName: "Стоимость минуты ожидания",
                 parameter: "",
-                unit: "MIN",
+                unit: "UZS",
+              },
+              {
+                parameterName: "Штрафной платеж",
+                parameter: "",
+                unit: "UZS",
               },
             ]}
           >
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
-                  <Row gutter={[16, 16]} align="top" key={key}>
-                    <Col span={7}>
+                  <Row gutter={[16, 16]} key={key}>
+                    {/* Parameter Name Input */}
+                    <Col style={{ width: "250px" }}>
                       <Form.Item
                         {...restField}
                         name={[name, "parameterName"]}
@@ -209,10 +200,12 @@ const Pricing: FC = () => {
                           { required: true, message: "Введите значение" },
                         ]}
                       >
-                        <Input />
+                        <Input placeholder="Название параметра" />
                       </Form.Item>
                     </Col>
-                    <Col span={7}>
+
+                    {/* Parameter Value Input */}
+                    <Col>
                       <Form.Item
                         {...restField}
                         name={[name, "parameter"]}
@@ -223,18 +216,26 @@ const Pricing: FC = () => {
                         <Input type="number" placeholder="Значение" />
                       </Form.Item>
                     </Col>
-                    <Col span={3}>
+
+                    {/* Unit Selection */}
+                    <Col>
                       <Form.Item
                         {...restField}
                         name={[name, "unit"]}
                         rules={[{ required: true, message: "Введите единицу" }]}
                       >
-                        <Select style={{ width: "100%" }}>
+                        <Select
+                          placeholder="Ед.измерения"
+                          style={{ width: "100%" }}
+                        >
                           <Option value="MIN">МИН</Option>
+                          <Option value="HOUR">ЧАС</Option>
                           <Option value="UZS">UZS</Option>
                         </Select>
                       </Form.Item>
                     </Col>
+
+                    {/* Delete Button */}
                     <Col>
                       <Button onClick={() => remove(name)} danger>
                         <DeleteOutlined />
@@ -242,6 +243,7 @@ const Pricing: FC = () => {
                     </Col>
                   </Row>
                 ))}
+                {/* Add New Parameter Button */}
                 <Form.Item>
                   <Button
                     type="dashed"
@@ -254,6 +256,7 @@ const Pricing: FC = () => {
               </>
             )}
           </Form.List>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Сохранить
