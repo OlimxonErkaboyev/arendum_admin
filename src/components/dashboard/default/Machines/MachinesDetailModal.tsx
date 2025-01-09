@@ -13,13 +13,13 @@ import useRegion from "../../../../hooks/region/useRegion";
 import dayjs from "dayjs";
 import { DownOutlined } from "@ant-design/icons";
 
-interface RegionDetailModalProps {
+interface MachinesDetailModalProps {
   open: boolean;
   onCancel?: () => void;
   id?: string;
 }
 
-const RegionDetailModal: FC<RegionDetailModalProps> = ({
+const MachinesDetailModal: FC<MachinesDetailModalProps> = ({
   open,
   onCancel,
   id,
@@ -104,4 +104,4 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
   );
 };
 
-export default RegionDetailModal;
+export default MachinesDetailModal;

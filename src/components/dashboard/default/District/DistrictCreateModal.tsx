@@ -1,7 +1,8 @@
 import { Form, Input, message, Modal, Select } from "antd";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import useStructure from "../../../../hooks/structure/useStructure";
 import useRegion from "../../../../hooks/region/useRegion";
-import { regions } from "../../../../constants";
+import { showErrors } from "../../../../errorHandler/errors";
 
 interface DistrictCreateModalProps {
   open: boolean;
@@ -16,7 +17,12 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-  const { createLoading, addRegion } = useRegion();
+  const { createLoading, create, getStructure } = useStructure();
+  const { regions, getRegions, listLoading } = useRegion();
+
+  useEffect(() => {
+    getRegions();
+  }, []);
 
   const forms = [
     {
@@ -28,8 +34,8 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
         <Select
           showSearch
           allowClear
-          // loading={createLoading}
-          // disabled={createLoading}
+          loading={listLoading}
+          disabled={listLoading}
           filterOption={(inputValue, option: { label: string }) =>
             option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
           }
@@ -38,7 +44,7 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
             regions?.map((item) => {
               return {
                 value: item.id,
-                label: item.name,
+                label: item.nameRu,
               };
             })
           }
@@ -47,24 +53,20 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
     },
     {
       label: "Имя ( RU )",
-      name: "regionNameRU",
+      name: "nameRu",
       required: true,
       message: "Заполните",
       child: (
-        <Input
-          onChange={(e) => form.setFieldValue("diNameRU", e.target.value)}
-        />
+        <Input onChange={(e) => form.setFieldValue("nameRu", e.target.value)} />
       ),
     },
     {
       label: "Имя ( UZ )",
-      name: "regionNameUZ",
+      name: "nameUz",
       required: true,
       message: "Заполните",
       child: (
-        <Input
-          onChange={(e) => form.setFieldValue("regionNameUZ", e.target.value)}
-        />
+        <Input onChange={(e) => form.setFieldValue("nameUz", e.target.value)} />
       ),
     },
   ];
@@ -76,18 +78,20 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
       onOk={() => {
         form.validateFields().then(() => {
           const values = form.getFieldsValue();
-          addRegion(values)
-            .then((newRegion) => {
-              message.success({
-                content: `Успешно создано: ${newRegion.id}`,
-              });
+          const allValues = { ...values, name: "aaa" };
+          create(allValues).then((res) => {
+            console.log(res);
+            if (res) {
+              getStructure({ limit: 10, page: 1 });
               onSuccessFields && onSuccessFields();
+              message.success({
+                content: "Успешно создано",
+              });
               form.resetFields();
-            })
-            .catch((error) => {
-              message.error("Ошибка создания региона");
-              console.error(error);
-            });
+            } else {
+              showErrors(res.message);
+            }
+          });
         });
       }}
       okText="Сохранить"

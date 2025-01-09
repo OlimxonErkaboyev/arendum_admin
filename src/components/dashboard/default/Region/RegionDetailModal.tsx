@@ -47,12 +47,12 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
       },
       {
         label: "Имя (RU)",
-        children: detail?.name,
+        children: detail?.nameRu,
         span: 4,
       },
       {
         label: "Имя (UZ)",
-        children: detail?.name,
+        children: detail?.nameUz,
         span: 4,
       },
       {
@@ -65,7 +65,7 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
           >
             <Typography.Link>
               <Space>
-                {detail?.facilities && detail.facilities.length > 0 ? (
+                {detail?.structure && detail.structure.length > 0 ? (
                   <>
                     Show facilities <DownOutlined />
                   </>

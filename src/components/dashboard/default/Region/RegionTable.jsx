@@ -14,26 +14,23 @@ const RegionTable = () => {
   const [detailModal, setDetailModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [detailId, setDetailId] = useState(null);
-  const [params, setParams] = useState({
-    page: 1,
-    limit: 20,
-    filters: [],
-  });
 
   useEffect(() => {
-    getRegions(params);
+    getRegions({ page: 1, limit: 10 });
   }, []);
+
+  
 
   const columns = [
     {
       title: "Имя (RU)",
-      dataIndex: "name",
+      dataIndex: "nameRu",
       width: "30%",
       key: "name",
     },
     {
       title: "Имя (UZ)",
-      dataIndex: "name",
+      dataIndex: "nameUz",
       width: "30%",
       key: "name",
     },

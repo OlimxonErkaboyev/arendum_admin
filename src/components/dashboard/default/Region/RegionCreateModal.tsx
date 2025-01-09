@@ -1,6 +1,7 @@
 import { Form, Input, message, Modal } from "antd";
 import { FC } from "react";
 import useRegion from "../../../../hooks/region/useRegion";
+import { showErrors } from "../../../../errorHandler/errors";
 
 interface RegionCreateModalProps {
   open: boolean;
@@ -20,22 +21,20 @@ const RegionCreateModal: FC<RegionCreateModalProps> = ({
   const forms = [
     {
       label: "Имя ( RU )",
-      name: "name",
+      name: "nameRu",
       required: true,
       message: "Заполните",
       child: (
-        <Input onChange={(e) => form.setFieldValue("name", e.target.value)} />
+        <Input onChange={(e) => form.setFieldValue("nameRu", e.target.value)} />
       ),
     },
     {
       label: "Имя ( UZ )",
-      name: "regionNameUZ",
+      name: "nameUz",
       required: true,
       message: "Заполните",
       child: (
-        <Input
-          onChange={(e) => form.setFieldValue("regionNameUZ", e.target.value)}
-        />
+        <Input onChange={(e) => form.setFieldValue("nameUz", e.target.value)} />
       ),
     },
   ];
@@ -47,19 +46,20 @@ const RegionCreateModal: FC<RegionCreateModalProps> = ({
       onOk={() => {
         form.validateFields().then(() => {
           const values = form.getFieldsValue();
-          create(values)
-            .then((newRegion) => {
-              message.success({
-                content: `Успешно создано: ${newRegion.name}`,
-              });
+          const allValues = { ...values, name: "aaa" };
+          create(allValues).then((res) => {
+            console.log(res);
+            if (res.status === 1) {
+              getRegions({ limit: 10, page: 1 });
               onSuccessFields && onSuccessFields();
+              message.success({
+                content: "Успешно создано",
+              });
               form.resetFields();
-              getRegions({ page: 1, limit: 10 });
-            })
-            .catch((error) => {
-              message.error("Ошибка создания региона");
-              console.error(error);
-            });
+            } else {
+              showErrors(res.message);
+            }
+          });
         });
       }}
       okText="Сохранить"

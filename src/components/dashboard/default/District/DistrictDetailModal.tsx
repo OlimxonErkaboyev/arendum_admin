@@ -1,42 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Descriptions,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Space,
-  Spin,
-  Typography,
-} from "antd";
+import { Descriptions, Modal, Spin } from "antd";
 import { FC, useEffect, useMemo } from "react";
-import useRegion from "../../../../hooks/region/useRegion";
+import useStructure from "../../../../hooks/structure/useStructure";
 import dayjs from "dayjs";
-import { DownOutlined } from "@ant-design/icons";
 
-interface RegionDetailModalProps {
+interface StructureDetailModalProps {
   open: boolean;
   onCancel?: () => void;
   id?: string;
 }
 
-const RegionDetailModal: FC<RegionDetailModalProps> = ({
+const StructureDetailModal: FC<StructureDetailModalProps> = ({
   open,
   onCancel,
   id,
 }) => {
-  const { getDetail, detail, detailLoading } = useRegion();
+  const { getDetail, detail, detailLoading } = useStructure();
 
   useEffect(() => {
     if (id && open) {
       getDetail(id);
     }
   }, [id]);
-
-  const items: MenuProps["items"] =
-    detail?.facilities?.map((facility, index) => ({
-      key: index.toString(),
-      label: <Space>{facility.facilityNameRU}</Space>,
-    })) || [];
 
   const detailItems = useMemo(() => {
     return [
@@ -47,35 +32,12 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
       },
       {
         label: "Имя (RU)",
-        children: detail?.regionNameRU,
+        children: detail?.nameRu,
         span: 4,
       },
       {
         label: "Имя (UZ)",
-        children: detail?.regionNameUZ,
-        span: 4,
-      },
-      {
-        label: "Объект",
-        children: (
-          <Dropdown
-            menu={{ items }}
-            placement="bottom"
-            arrow={{ pointAtCenter: true }}
-          >
-            <Typography.Link>
-              <Space>
-                {detail?.facilities && detail.facilities.length > 0 ? (
-                  <>
-                    Show facilities <DownOutlined />
-                  </>
-                ) : (
-                  "Not facilities"
-                )}
-              </Space>
-            </Typography.Link>
-          </Dropdown>
-        ),
+        children: detail?.nameUz,
         span: 4,
       },
       {
@@ -90,7 +52,7 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
 
   return (
     <Modal
-      title={`${detail?.regionNameRU}`}
+      title={`${detail?.nameRu}`}
       open={open}
       cancelButtonProps={{ style: { display: "none" } }}
       okText="Закрыть"
@@ -104,4 +66,4 @@ const RegionDetailModal: FC<RegionDetailModalProps> = ({
   );
 };
 
-export default RegionDetailModal;
+export default StructureDetailModal;

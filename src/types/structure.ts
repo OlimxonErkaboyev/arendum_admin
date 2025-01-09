@@ -1,7 +1,17 @@
+export type StructureFilterType = {
+  page: number | string;
+  limit: number | string;
+  sortUz: string;
+  sortRu: string;
+  filter: [
+    {
+      column: string;
+      value: string;
+      operator: string;
+    },
+  ];
+};
 export type StructureParamsType = {
-    name: string;
-    support_phone: string;
-    status: number | string;
-    parent_id: null;
-    region_id: null;
-}
+  structureNameUZ: string;
+  structureNameRU: string;
+};

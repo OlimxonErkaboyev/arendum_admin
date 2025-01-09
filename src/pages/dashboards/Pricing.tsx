@@ -15,12 +15,45 @@ import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { categories } from "../../constants";
 const { Option } = Select;
 
+interface Parameter {
+  additionalParameters: [
+    {
+      parameterName: string;
+      parameter: number;
+      unit: string;
+      type: string;
+    },
+  ];
+  machineId: number;
+  min_amount: number;
+  min_waiting_time: number;
+  tariffName: string;
+}
+
 const Pricing: FC = () => {
   const [form] = Form.useForm();
   const [calculationType, setCalculationType] = useState<string>("km");
 
-  const onFinish = (values: unknown) => {
-    console.log("Form values:", values);
+  const onFinish = (values: Parameter) => {
+    const formattedParameters = values.additionalParameters.map(
+      (item, index) => {
+        const initialType = ["waiting_time", "waiting_amount", "fine_payment"][
+          index
+        ];
+        return {
+          ...item,
+          type: item.type || initialType || "another_type", // type ni saqlash yoki initialValue'dan olish
+        };
+      }
+    );
+
+    const finalData = {
+      ...values,
+      additionalParameters: formattedParameters, // Formatlangan ma'lumotlarni qo'shish
+    };
+
+    console.log("Backendga yuboriladigan ma'lumot:", finalData);
+    // Zaprosni shu yerda yuborasiz
   };
 
   return (
@@ -173,16 +206,19 @@ const Pricing: FC = () => {
               {
                 parameterName: "Бесплатные минуты ожидания",
                 parameter: "",
+                type: "waiting_time",
                 unit: "MIN",
               },
               {
                 parameterName: "Стоимость минуты ожидания",
                 parameter: "",
+                type: "waiting_amount",
                 unit: "UZS",
               },
               {
                 parameterName: "Штрафной платеж",
                 parameter: "",
+                type: "fine_payment",
                 unit: "UZS",
               },
             ]}

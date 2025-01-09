@@ -2,35 +2,43 @@
 import { Button, Popconfirm, Space, Table, message } from "antd";
 import { DeleteOutlined, EyeOutlined, FormOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
-import useRegion from "../../../../hooks/region/useRegion";
-import RegionDetailModal from "./RegionDetailModal";
-import RegionEditModal from "./RegionEditModal";
+import useMachines from "../../../../hooks/machines/useMachines";
+import RegionDetailModal from "./MachinesDetailModal";
+import RegionEditModal from "./MachinesEditModal";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 
-const Category_equipmentTable = () => {
-  const { regions, getRegions, remove, listLoading } = useRegion();
+const MachinesTable = () => {
+  const { machines, getMachines, remove, listLoading } = useMachines();
 
   const [detailModal, setDetailModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [detailId, setDetailId] = useState(null);
 
   useEffect(() => {
-    getRegions();
+    getMachines();
   }, []);
 
   const columns = [
     {
-      title: "Имя (RU)",
-      dataIndex: "regionNameRU",
+      title: "Фото",
+      dataIndex: "img",
       width: "30%",
-      key: "regionNameRU",
+      render: (img) => <img width={150} src={`http://hasandev.uz${img}`} />,
+
+      key: "img",
+    },
+    {
+      title: "Имя (RU)",
+      dataIndex: "nameRu",
+      width: "30%",
+      key: "nameRu",
     },
     {
       title: "Имя (UZ)",
-      dataIndex: "regionNameUZ",
+      dataIndex: "nameUz",
       width: "30%",
-      key: "regionNameUZ",
+      key: "nameUz",
     },
     {
       title: "Дата создания",
@@ -47,7 +55,7 @@ const Category_equipmentTable = () => {
     },
   ];
   const data = useMemo(() => {
-    return regions?.map((item) => {
+    return machines?.map((item) => {
       return {
         ...item,
         key: item.id,
@@ -81,7 +89,7 @@ const Category_equipmentTable = () => {
               onConfirm={() => {
                 remove(item?.id).then(() => {
                   message.success("Успешно удалено");
-                  getRegions();
+                  getMachines();
                 });
               }}
             >
@@ -91,7 +99,7 @@ const Category_equipmentTable = () => {
         ),
       };
     });
-  }, [regions]);
+  }, [machines]);
 
   return (
     <>
@@ -123,4 +131,4 @@ const Category_equipmentTable = () => {
   );
 };
 
-export default Category_equipmentTable;
+export default MachinesTable;

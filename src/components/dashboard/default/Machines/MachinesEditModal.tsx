@@ -3,13 +3,17 @@ import { FC, useEffect } from "react";
 import useRegion from "../../../../hooks/region/useRegion";
 import { showErrors } from "../../../../errorHandler/errors";
 
-interface RegionEditModalProps {
+interface MachinesEditModalProps {
   open: boolean;
   onCancel?: () => void;
   id?: string;
 }
 
-const RegionEditModal: FC<RegionEditModalProps> = ({ open, onCancel, id }) => {
+const MachinesEditModal: FC<MachinesEditModalProps> = ({
+  open,
+  onCancel,
+  id,
+}) => {
   const {
     getDetail,
     getRegions,
@@ -115,4 +119,4 @@ const RegionEditModal: FC<RegionEditModalProps> = ({ open, onCancel, id }) => {
   );
 };
 
-export default RegionEditModal;
+export default MachinesEditModal;

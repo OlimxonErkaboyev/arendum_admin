@@ -25,7 +25,7 @@ import DriverEditPage from "../components/dashboard/default/Drivers/DriverEditPa
 import DriverCreatePage from "../components/dashboard/default/Drivers/DriverCreatePage";
 import Region from "../pages/dashboards/Region";
 import District from "../pages/dashboards/District";
-import Category_equipment from "../pages/dashboards/Category_equipment";
+import Category_equipment from "../pages/dashboards/Machines";
 import Specifications from "../pages/dashboards/Specifications";
 import SpecificationsCreate from "../components/dashboard/default/Specifications/SpecificationsCreate";
 import Pricing from "../pages/dashboards/Pricing";

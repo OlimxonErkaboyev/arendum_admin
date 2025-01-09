@@ -12,10 +12,12 @@ import {
   DriversParamsType,
   UploadImgType,
 } from "../types/drivers";
+import { MachinesFilterType, MachinesParamsType } from "../types/machines";
 import { RegionFilterType } from "../types/region";
 import { ReportFilterType } from "../types/reprortFilterType";
 import { RolesParamsType } from "../types/roles";
 import { ServicesFilterType, ServicesParamsType } from "../types/service";
+import { StructureFilterType, StructureParamsType } from "../types/structure";
 import { $api } from "./api";
 
 export const requests = {
@@ -34,7 +36,27 @@ export const requests = {
   regionUpdate: (id: string, params: RegionParamsType) =>
     $api.put(`${API_URL}/region/update/${id}`, params), //! done
   fetchRegionDetail: (id: string) => $api.get(`${API_URL}/region/${id}`), //! done
-  regionDelete: (id: string) => $api.delete(`${API_URL}/region/${id}`), //! done
+  regionDelete: (id: string) => $api.delete(`${API_URL}/region/delete/${id}`), //! done
+  //* Machines
+  postMachinesCreate: (params: MachinesParamsType) =>
+    $api.post(`${API_URL}/machines/create`, params), //! done
+  fetchMachinesList: (params: MachinesFilterType) =>
+    $api.get(`${API_URL}/machines`, { params }), //! done
+  machinesUpdate: (id: string, params: RegionParamsType) =>
+    $api.put(`${API_URL}/machines/update/${id}`, params), //! done
+  fetchMachinesDetail: (id: string) => $api.get(`${API_URL}/machines/${id}`), //! done
+  machinesDelete: (id: string) =>
+    $api.delete(`${API_URL}/machines/delete/${id}`), //! done
+  //* Structure
+  postStructureCreate: (params: StructureFilterType) =>
+    $api.post(`${API_URL}/structure/create`, params), //! done
+  fetchStructureList: (params: StructureFilterType) =>
+    $api.get(`${API_URL}/structure`, { params }), //! done
+  structureUpdate: (id: string, params: StructureParamsType) =>
+    $api.put(`${API_URL}/structure/update/${id}`, params), //! done
+  fetchStructureDetail: (id: string) => $api.get(`${API_URL}/structure/${id}`), //! done
+  structureDelete: (id: string) =>
+    $api.delete(`${API_URL}/structure/delete/${id}`), //! done
   //* Drivers
   fetchDriversList: (params: DriversFilterType) =>
     $api.get(`${API_URL}/driver`, { params }),

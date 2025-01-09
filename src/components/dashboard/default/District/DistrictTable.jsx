@@ -1,43 +1,104 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Button, Popconfirm, Space, Table, message } from "antd";
+import {
+  Button,
+  DatePicker,
+  Input,
+  Popconfirm,
+  Space,
+  Table,
+  message,
+} from "antd";
 import { DeleteOutlined, EyeOutlined, FormOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
-import useRegion from "../../../../hooks/region/useRegion";
-import RegionDetailModal from "./DistrictDetailModal";
-import RegionEditModal from "./DistrictEditModal";
+import useStructure from "../../../../hooks/structure/useStructure";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import { addFilter, getDateTime } from "../../../../utils";
+import StructureDetailModal from "./DistrictDetailModal";
+import StructureEditModal from "./DistrictEditModal";
+import TableTitle from "../../../TableTitle/TableTitle";
 
 const DistrictTable = () => {
-  const { regions, getRegions, remove, listLoading } = useRegion();
+  const { structure, getStructure, remove, listLoading, pagination } =
+    useStructure();
 
   const [detailModal, setDetailModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [detailId, setDetailId] = useState(null);
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 10,
+    filters: [],
+  });
 
   useEffect(() => {
-    getRegions();
+    getStructure(params);
   }, []);
+
+  const filter = () => {
+    const newParams = { ...params };
+    newParams["page"] = 1;
+    setParams(newParams);
+    getStructure(newParams);
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      filter();
+    }
+  };
 
   const columns = [
     {
       title: "Имя (RU)",
-      dataIndex: "name",
       width: "30%",
-      key: "regionNameRU",
+      children: [
+        {
+          title: (
+            <Input
+              onChange={(e) => addFilter(setParams, "nameRu", e.target.value)}
+              onKeyPress={onKeyPress}
+            />
+          ),
+          dataIndex: "nameRu",
+          key: "nameRu",
+        },
+      ],
     },
     {
       title: "Имя (UZ)",
-      dataIndex: "name",
       width: "30%",
-      key: "regionNameUZ",
+      children: [
+        {
+          title: (
+            <Input
+              onChange={(e) => addFilter(setParams, "nameUz", e.target.value)}
+              onKeyPress={onKeyPress}
+            />
+          ),
+          dataIndex: "nameUz",
+          key: "nameUz",
+        },
+      ],
     },
     {
       title: "Дата создания",
-      dataIndex: "createdAt",
       width: "20%",
-      key: "createdAt",
-      render: (createdAt) => dayjs(createdAt).format("DD-MM-YYYY  HH:mm:ss"),
+      children: [
+        {
+          title: (
+            <DatePicker.RangePicker
+              onChange={(e, v) =>
+                addFilter(setParams, "createdAt", getDateTime(e, v), "between")
+              }
+            />
+          ),
+          dataIndex: "createdAt",
+          key: "createdAt",
+          render: (createdAt) =>
+            dayjs(createdAt).format("DD-MM-YYYY  HH:mm:ss"),
+        },
+      ],
     },
     {
       title: "",
@@ -47,7 +108,7 @@ const DistrictTable = () => {
     },
   ];
   const data = useMemo(() => {
-    return regions?.map((item) => {
+    return structure?.map((item) => {
       return {
         ...item,
         key: item.id,
@@ -81,7 +142,7 @@ const DistrictTable = () => {
               onConfirm={() => {
                 remove(item?.id).then(() => {
                   message.success("Успешно удалено");
-                  getRegions();
+                  getStructure(params);
                 });
               }}
             >
@@ -91,7 +152,7 @@ const DistrictTable = () => {
         ),
       };
     });
-  }, [regions]);
+  }, [structure]);
 
   return (
     <>
@@ -101,9 +162,36 @@ const DistrictTable = () => {
         columns={columns}
         dataSource={data}
         loading={listLoading}
-        pagination={false}
+        title={() => (
+          <TableTitle>
+            <Button type="primary" onClick={() => window.location.reload()}>
+              Очистить
+            </Button>
+            <Button type="primary" onClick={filter}>
+              Искать
+            </Button>
+          </TableTitle>
+        )}
+        pagination={{
+          onChange: (page, pageSize) => {
+            const newParams = { ...params };
+            newParams.pageSize = pageSize;
+            newParams.pageNumber = page;
+            setParams(newParams);
+            getStructure(newParams);
+          },
+          total: pagination.totalUsers,
+          showTotal: (total, range) => (
+            <div className="show-total-pagination">
+              Показаны <b>{range[0]}</b> - <b>{range[1]}</b> из <b>{total}</b>{" "}
+              записи.
+            </div>
+          ),
+          pageSize: pagination.pageSize,
+          current: pagination.currentPage,
+        }}
       />
-      <RegionDetailModal
+      <StructureDetailModal
         open={detailModal}
         onCancel={() => {
           setDetailModal(false);
@@ -111,7 +199,7 @@ const DistrictTable = () => {
         }}
         id={detailId}
       />
-      <RegionEditModal
+      <StructureEditModal
         open={editModal}
         onCancel={() => {
           setEditModal(false);

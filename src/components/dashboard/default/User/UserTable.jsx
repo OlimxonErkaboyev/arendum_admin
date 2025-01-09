@@ -21,12 +21,11 @@ import {
 import TableTitle from "../../../TableTitle/TableTitle";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { regions, users } from "./../../../../constants/index";
+import { regions } from "./../../../../constants/index";
 import useUser from "../../../../hooks/user/useUser";
 
 const UserTable = () => {
-  const { users, pagination, getList, remove, listLoading, getStatus, status } =
-    useUser();
+  const { users, getList } = useUser();
   // const { roles, getRoles } = useRoles();
   // const { user } = useAuth();
   console.log(users);

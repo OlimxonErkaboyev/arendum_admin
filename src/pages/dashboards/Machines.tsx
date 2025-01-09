@@ -3,10 +3,10 @@ import { Card, PageHeader } from "../../components";
 import MainButton from "../../components/MainButton/MainButton";
 import { FormOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import Category_equipmentCreateModal from "../../components/dashboard/default/Category_equipment/Category_equipmentCreateModal";
-import Category_equipmentTable from "./../../components/dashboard/default/Category_equipment/Category_equipmentTable";
+import MachinesCreateModal from "../../components/dashboard/default/Machines/MachinesCreateModal";
+import MachinesTable from "../../components/dashboard/default/Machines/MachinesTable";
 
-const Category_equipment = () => {
+const Machines = () => {
   const [modal, setModal] = useState(false);
 
   return (
@@ -29,9 +29,9 @@ const Category_equipment = () => {
             }
           />
         </Card>
-        <Category_equipmentTable />
+        <MachinesTable />
       </div>
-      <Category_equipmentCreateModal
+      <MachinesCreateModal
         onSuccessFields={() => setModal(false)}
         open={modal}
         onCancel={() => {
@@ -42,4 +42,4 @@ const Category_equipment = () => {
   );
 };
 
-export default Category_equipment;
+export default Machines;

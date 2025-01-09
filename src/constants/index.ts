@@ -74,6 +74,10 @@ export const PricingTypes = [
     name: "Бесплатные минуты ожидания",
     value: "fine_payment",
   },
+  {
+    name: "Другие",
+    value: "another",
+  },
 ];
 
 export const Tranzactions = [

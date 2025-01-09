@@ -16,7 +16,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useDrivers from "../../../../hooks/drivers/useDrivers.jsx";
 
-interface UploadFile {
+export interface UploadFile {
   uid: string;
   name: string;
   status?: "uploading" | "done" | "error" | "removed";
@@ -24,7 +24,7 @@ interface UploadFile {
   thumbUrl?: string;
 }
 
-interface UploadedFilesType {
+export interface UploadedFilesType {
   [key: string]: string[];
 }
 

@@ -31,8 +31,8 @@ const RegionEditModal: FC<RegionEditModalProps> = ({ open, onCancel, id }) => {
   useEffect(() => {
     if (form && detail) {
       form.setFieldsValue({
-        name: detail?.name,
-        // name: detail?.name,
+        nameRu: detail?.nameRu,
+        nameUz: detail?.nameUz,
       });
     }
   }, [detail, form]);
@@ -40,8 +40,8 @@ const RegionEditModal: FC<RegionEditModalProps> = ({ open, onCancel, id }) => {
   const onSave = async () => {
     await form.validateFields().then(() => {
       const values = form.getFieldsValue();
-      console.log(values);
-      update(id, values).then((res) => {
+      const allValues = { ...values, name: "aaaa" };
+      update(id, allValues).then((res) => {
         console.log(res);
         if (res) {
           getRegions({ page: 1, limit: 10 });
@@ -57,30 +57,28 @@ const RegionEditModal: FC<RegionEditModalProps> = ({ open, onCancel, id }) => {
   const forms = [
     {
       label: "Имя ( RU )",
-      name: "name",
+      name: "nameRu",
       required: true,
       message: "Заполните",
       child: (
-        <Input onChange={(e) => form.setFieldValue("name", e.target.value)} />
+        <Input onChange={(e) => form.setFieldValue("nameRu", e.target.value)} />
       ),
     },
-    // {
-    //   label: "Имя ( UZ )",
-    //   name: "name",
-    //   required: true,
-    //   message: "Заполните",
-    //   child: (
-    //     <Input
-    //       onChange={(e) => form.setFieldValue("name", e.target.value)}
-    //     />
-    //   ),
-    // },
+    {
+      label: "Имя ( UZ )",
+      name: "nameUz",
+      required: true,
+      message: "Заполните",
+      child: (
+        <Input onChange={(e) => form.setFieldValue("nameUz", e.target.value)} />
+      ),
+    },
   ];
 
   return (
     <>
       <Modal
-        title={`${detail?.name}`}
+        title={`${detail?.nameRu}`}
         open={open}
         okText="Сохранить"
         onOk={() => {
