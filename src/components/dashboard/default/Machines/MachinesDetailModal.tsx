@@ -1,17 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Descriptions,
-  Dropdown,
-  MenuProps,
-  Modal,
-  Space,
-  Spin,
-  Typography,
-} from "antd";
+import { Descriptions, Modal, Spin } from "antd";
 import { FC, useEffect, useMemo } from "react";
-import useRegion from "../../../../hooks/region/useRegion";
+import useMachines from "../../../../hooks/machines/useMachines";
 import dayjs from "dayjs";
-import { DownOutlined } from "@ant-design/icons";
 
 interface MachinesDetailModalProps {
   open: boolean;
@@ -24,19 +15,13 @@ const MachinesDetailModal: FC<MachinesDetailModalProps> = ({
   onCancel,
   id,
 }) => {
-  const { getDetail, detail, detailLoading } = useRegion();
+  const { getDetail, detail, detailLoading } = useMachines();
 
   useEffect(() => {
     if (id && open) {
       getDetail(id);
     }
   }, [id]);
-
-  const items: MenuProps["items"] =
-    detail?.facilities?.map((facility, index) => ({
-      key: index.toString(),
-      label: <Space>{facility.facilityNameRU}</Space>,
-    })) || [];
 
   const detailItems = useMemo(() => {
     return [
@@ -47,37 +32,15 @@ const MachinesDetailModal: FC<MachinesDetailModalProps> = ({
       },
       {
         label: "Имя (RU)",
-        children: detail?.regionNameRU,
+        children: detail?.nameRu,
         span: 4,
       },
       {
         label: "Имя (UZ)",
-        children: detail?.regionNameUZ,
+        children: detail?.nameUz,
         span: 4,
       },
-      {
-        label: "Объект",
-        children: (
-          <Dropdown
-            menu={{ items }}
-            placement="bottom"
-            arrow={{ pointAtCenter: true }}
-          >
-            <Typography.Link>
-              <Space>
-                {detail?.facilities && detail.facilities.length > 0 ? (
-                  <>
-                    Show facilities <DownOutlined />
-                  </>
-                ) : (
-                  "Not facilities"
-                )}
-              </Space>
-            </Typography.Link>
-          </Dropdown>
-        ),
-        span: 4,
-      },
+
       {
         label: "Дата создания",
         children: detail?.createdAt
@@ -90,7 +53,7 @@ const MachinesDetailModal: FC<MachinesDetailModalProps> = ({
 
   return (
     <Modal
-      title={`${detail?.regionNameRU}`}
+      title={`${detail?.name}`}
       open={open}
       cancelButtonProps={{ style: { display: "none" } }}
       okText="Закрыть"

@@ -1,21 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Badge, Button, Popconfirm, Space, Table, message } from "antd";
+import { Button, Popconfirm, Space, Table, message } from "antd";
 import { DeleteOutlined, EyeOutlined, FormOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import { useEffect } from "react";
-import useSpecification from "../../../../hooks/specifications/useSpecification.jsx";
-import useMachines from "../../../../hooks/machines/useMachines";
+import useMachines from "../../../../hooks/machines/useMachines.jsx";
+import usePricing from "../../../../hooks/pricing/usePricing.jsx";
 import dayjs from "dayjs";
 
-const SpecificationsTable = () => {
-  const { getList, specifications, listLoading, remove, removeLoading } =
-    useSpecification();
+const PricingTable = () => {
+  // const { getList, specifications, listLoading, remove, removeLoading } =
+  //   useSpecification();
   const { machines, getMachines } = useMachines();
+  const { pricing, getList, listLoading, remove, removeLoading } = usePricing();
 
   // const [detailId, setDetailId] = useState(null);
-  const [params,] = useState({
+  const [params] = useState({
     page: 1,
     limit: 20,
     filters: [],
@@ -34,36 +34,29 @@ const SpecificationsTable = () => {
   }, []);
 
   const columns = [
+    // {
+    //   title: "Значение",
+    //   width: "40%",
+    //   key: "params",
+    //   // dataIndex: "params",
+    //   render: (parametres) => {
+    //     if (parametres && Array.isArray(parametres.params)) {
+    //       return parametres.params.map((param, index) => (
+    //         <Badge
+    //           style={{ marginRight: "3px" }}
+    //           key={index}
+    //           count={`${param.param}
+    //           ${parametres.name}`}
+    //           showZero
+    //           color="blue"
+    //         />
+    //       ));
+    //     }
+    //     return "No parameters available";
+    //   },
+    // },
     {
-      title: "Название параметра",
-      dataIndex: "nameRu",
-      width: "20%",
-      key: "nameRu",
-    },
-    {
-      title: "Значение",
-      width: "40%",
-      key: "params",
-      // dataIndex: "params",
-      render: (parametres) => {
-        if (parametres && Array.isArray(parametres.params)) {
-          return parametres.params.map((param, index) => (
-            <Badge
-              style={{ marginRight: "3px" }}
-              key={index}
-              count={`${param.param}
-              ${parametres.name}`}
-              showZero
-              color="blue"
-            />
-          ));
-        }
-        return "No parameters available";
-      },
-    },
-
-    {
-      title: "Связь с категорией",
+      // title: "Связь с категорией",
       // dataIndex: "machineId",
       width: "20%",
       key: "machineId",
@@ -77,37 +70,62 @@ const SpecificationsTable = () => {
       },
     },
     {
-      title: "Дата создания",
+      // title: "",
+      width: "40%",
+      dataIndex: "parameters",
+      key: "parameters",
+    },
+    {
+      // title: "Название параметра",
+      dataIndex: "nameRu",
+      width: "20%",
+      key: "nameRu",
+    },
+
+    {
+      // title: "Дата создания",
       dataIndex: "createdAt",
       width: "30%",
       key: "createdAt",
       render: (createdAt) => dayjs(createdAt).format("DD-MM-YYYY  HH:mm:ss"),
     },
     {
-      title: "",
+      // title: "",
       width: "20%",
       dataIndex: "others",
       key: "others",
     },
   ];
   const data = useMemo(() => {
-    return specifications?.map((item) => {
+    return pricing?.map((item) => {
       return {
         ...item,
         key: item.id,
         others: (
           <Space>
-            <Button onClick={() => {}} icon={<EyeOutlined />} />
-            <Button onClick={() => {}} icon={<FormOutlined />} />
+            <Button
+              onClick={() => {
+                // setDetailId(item?.id);
+              }}
+              icon={<EyeOutlined />}
+            />
+            <Button
+              onClick={() => {
+                // setDetailId(item?.id);
+              }}
+              icon={<FormOutlined />}
+            />
             <Popconfirm
               title="Вы точно хотите удалить?"
               okText="Да"
               cancelText="Нет"
-              // onOpenChange={(open) => {
-              //   if (open) {
-              //   } else {
-              //   }
-              // }}
+              onOpenChange={(open) => {
+                if (open) {
+                  // setDetailId(item?.id);
+                } else {
+                  // setDetailId(null);
+                }
+              }}
               onConfirm={() => {
                 remove(item?.id).then(() => {
                   message.success("Успешно удалено");
@@ -123,9 +141,10 @@ const SpecificationsTable = () => {
             </Popconfirm>
           </Space>
         ),
+        parameters: <Space></Space>,
       };
     });
-  }, [specifications]);
+  }, [pricing]);
 
   return (
     <>
@@ -141,4 +160,4 @@ const SpecificationsTable = () => {
   );
 };
 
-export default SpecificationsTable;
+export default PricingTable;

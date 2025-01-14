@@ -19,21 +19,19 @@ const RegionTable = () => {
     getRegions({ page: 1, limit: 10 });
   }, []);
 
-  
-
   const columns = [
     {
-      title: "Имя (RU)",
-      dataIndex: "nameRu",
+      title: "Имя",
+      dataIndex: "name",
       width: "30%",
       key: "name",
     },
-    {
-      title: "Имя (UZ)",
-      dataIndex: "nameUz",
-      width: "30%",
-      key: "name",
-    },
+    // {
+    //   title: "Имя (UZ)",
+    //   dataIndex: "nameUz",
+    //   width: "30%",
+    //   key: "name",
+    // },
     {
       title: "Дата создания",
       dataIndex: "createdAt",

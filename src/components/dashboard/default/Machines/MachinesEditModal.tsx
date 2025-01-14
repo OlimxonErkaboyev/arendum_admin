@@ -1,7 +1,7 @@
 import { Form, Input, message, Modal, Spin } from "antd";
 import { FC, useEffect } from "react";
-import useRegion from "../../../../hooks/region/useRegion";
 import { showErrors } from "../../../../errorHandler/errors";
+import useMachines from "../../../../hooks/machines/useMachines";
 
 interface MachinesEditModalProps {
   open: boolean;
@@ -16,12 +16,12 @@ const MachinesEditModal: FC<MachinesEditModalProps> = ({
 }) => {
   const {
     getDetail,
-    getRegions,
+    getMachines,
     update,
     detail,
     updateLoading,
     detailLoading,
-  } = useRegion();
+  } = useMachines();
 
   const [form] = Form.useForm();
 
@@ -35,8 +35,8 @@ const MachinesEditModal: FC<MachinesEditModalProps> = ({
   useEffect(() => {
     if (form && detail) {
       form.setFieldsValue({
-        regionNameRU: detail?.regionNameRU,
-        regionNameUZ: detail?.regionNameUZ,
+        nameRu: detail?.nameRu,
+        nameUz: detail?.nameUz,
       });
     }
   }, [detail, form]);
@@ -46,7 +46,7 @@ const MachinesEditModal: FC<MachinesEditModalProps> = ({
       const values = form.getFieldsValue();
       update(id, values).then((res) => {
         if (!res) {
-          getRegions({ pageNumber: 1, pageSize: 20 });
+          getMachines({ page: 1, limit: 20 });
           message.success({ content: "Обновлено успешно" });
           onCancel();
         } else {
@@ -59,24 +59,20 @@ const MachinesEditModal: FC<MachinesEditModalProps> = ({
   const forms = [
     {
       label: "Имя ( RU )",
-      name: "regionNameRU",
+      name: "nameRu",
       required: true,
       message: "Заполните",
       child: (
-        <Input
-          onChange={(e) => form.setFieldValue("regionNameRU", e.target.value)}
-        />
+        <Input onChange={(e) => form.setFieldValue("nameRu", e.target.value)} />
       ),
     },
     {
       label: "Имя ( UZ )",
-      name: "regionNameUZ",
+      name: "nameUz",
       required: true,
       message: "Заполните",
       child: (
-        <Input
-          onChange={(e) => form.setFieldValue("regionNameUZ", e.target.value)}
-        />
+        <Input onChange={(e) => form.setFieldValue("nameUz", e.target.value)} />
       ),
     },
   ];
@@ -84,7 +80,7 @@ const MachinesEditModal: FC<MachinesEditModalProps> = ({
   return (
     <>
       <Modal
-        title={`${detail?.regionNameRU}`}
+        title={`${detail?.name}`}
         open={open}
         okText="Сохранить"
         onOk={() => {

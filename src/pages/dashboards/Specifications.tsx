@@ -3,8 +3,8 @@ import { Card, PageHeader } from "../../components";
 import { FormOutlined } from "@ant-design/icons";
 import MainButton from "../../components/MainButton/MainButton";
 import { FC } from "react";
-import RegionTable from "../../components/dashboard/default/Region/RegionTable";
 import { useNavigate } from "react-router-dom";
+import SpecificationsTable from "../../components/dashboard/default/Specifications/SpecificationsTable";
 
 const Specifications: FC = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Specifications: FC = () => {
             }
           />
         </Card>
-        <RegionTable />
+        <SpecificationsTable />
       </div>
     </>
   );

@@ -29,16 +29,10 @@ const MachinesTable = () => {
       key: "img",
     },
     {
-      title: "Имя (RU)",
-      dataIndex: "nameRu",
+      title: "Имя",
+      dataIndex: "name",
       width: "30%",
-      key: "nameRu",
-    },
-    {
-      title: "Имя (UZ)",
-      dataIndex: "nameUz",
-      width: "30%",
-      key: "nameUz",
+      key: "name",
     },
     {
       title: "Дата создания",

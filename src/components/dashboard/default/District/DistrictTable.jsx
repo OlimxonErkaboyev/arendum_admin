@@ -50,34 +50,18 @@ const DistrictTable = () => {
 
   const columns = [
     {
-      title: "Имя (RU)",
+      title: "Имя",
       width: "30%",
       children: [
         {
           title: (
             <Input
-              onChange={(e) => addFilter(setParams, "nameRu", e.target.value)}
+              onChange={(e) => addFilter(setParams, "name", e.target.value)}
               onKeyPress={onKeyPress}
             />
           ),
-          dataIndex: "nameRu",
-          key: "nameRu",
-        },
-      ],
-    },
-    {
-      title: "Имя (UZ)",
-      width: "30%",
-      children: [
-        {
-          title: (
-            <Input
-              onChange={(e) => addFilter(setParams, "nameUz", e.target.value)}
-              onKeyPress={onKeyPress}
-            />
-          ),
-          dataIndex: "nameUz",
-          key: "nameUz",
+          dataIndex: "name",
+          key: "name",
         },
       ],
     },

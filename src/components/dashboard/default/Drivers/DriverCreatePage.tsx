@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Card,
   Button,
@@ -10,11 +11,14 @@ import {
   Col,
   message,
 } from "antd";
-import { useState } from "react";
-import { equipmentTypes, regions } from "../../../../constants";
+import { useEffect, useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useDrivers from "../../../../hooks/drivers/useDrivers.jsx";
+import useMachines from "../../../../hooks/machines/useMachines.jsx";
+import useRegions from "../../../../hooks/region/useRegion.jsx";
+import useStructure from "../../../../hooks/structure/useStructure.jsx";
+import { showErrors } from "../../../../errorHandler/errors.js";
 
 export interface UploadFile {
   uid: string;
@@ -31,10 +35,29 @@ export interface UploadedFilesType {
 const DriverCreatePage = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const { uploadImg } = useDrivers();
+  const { uploadImg, create, createLoading } = useDrivers();
+  const { getMachines, machines, listLoading } = useMachines();
+  const {
+    structure,
+    getStructure,
+    listLoading: structureLoading,
+  } = useStructure();
+  const { getRegions, regions, listLoading: regionLoading } = useRegions();
+
   const [isLegalPerson, setIsLegalPerson] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFilesType>({});
+  const [selectedRegion, setSelectedRegion] = useState<number>(0);
   const [fileList, setFileList] = useState<Record<string, UploadFile[]>>({});
+
+  useEffect(() => {
+    getMachines();
+    getRegions();
+    getStructure();
+  }, []);
+
+  
+
+  const districts = structure.filter((e) => e.regionId === selectedRegion);
 
   const handleFileUpload = async (file, name) => {
     const formData = new FormData();
@@ -68,7 +91,20 @@ const DriverCreatePage = () => {
       ...uploadedFiles,
       legal: isLegalPerson,
     };
-    console.log("Form Submitted:", finalValues);
+    create(finalValues).then((res) => {
+      if (res.success === true) {
+        getMachines({ limit: 10, page: 1 });
+        message.success({
+          content: "Успешно создано",
+        });
+        form.resetFields();
+        setUploadedFiles({});
+        setFileList({});
+        navigate(-1);
+      } else {
+        showErrors(res.message);
+      }
+    });
   };
 
   const handleFormCancel = () => {
@@ -83,6 +119,7 @@ const DriverCreatePage = () => {
       [name]: fileList,
     }));
   };
+
   const forms = [
     {
       label: "Ваше ФИО",
@@ -97,75 +134,72 @@ const DriverCreatePage = () => {
     },
     {
       label: "Тип вашей спецтехники",
-      name: "equipmentType",
+      name: "machineId",
       required: true,
       message: "Введите тип спецтехники",
       child: (
-        <Select
-          showSearch
-          allowClear
-          // loading={createLoading}
-          // disabled={createLoading}
-          filterOption={(inputValue, option: { label: string }) =>
-            option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
-          }
-          options={
-            equipmentTypes &&
-            equipmentTypes?.map((item) => {
-              return {
-                // value: item.id,
-                value: item.name,
-                label: item.name,
-              };
-            })
-          }
-        />
+          <Select
+            showSearch
+            allowClear
+            loading={listLoading}
+            disabled={listLoading}
+            filterOption={(inputValue, option: { label: string }) =>
+              option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
+            }
+            options={
+              machines &&
+              machines?.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.name,
+                };
+              })
+            }
+          />
       ),
     },
-    {
-      label: "Марка и модель вашего авто",
-      name: "equipmentModel",
-      required: true,
-      message: "Введите ГРН спецтехники",
-      child: (
-        <Input
-          onChange={(e) => form.setFieldValue("equipmentModel", e.target.value)}
-        />
-      ),
-    },
+    // {
+    //   label: "Марка и модель вашего авто",
+    //   name: "equipmentModel",
+    //   required: true,
+    //   message: "Введите ГРН спецтехники",
+    //   child: (
+    //     <Input
+    //       onChange={(e) => form.setFieldValue("equipmentModel", e.target.value)}
+    //     />
+    //   ),
+    // },
     {
       label: "Гос.номер авто",
-      name: "equipmentNumber",
+      name: "machineNumber",
       required: true,
       message: "Введите ГРН спецтехники",
       child: (
         <Input
-          onChange={(e) =>
-            form.setFieldValue("equipmentNumber", e.target.value)
-          }
+          onChange={(e) => form.setFieldValue("machineNumber", e.target.value)}
         />
       ),
     },
     {
       label: "Цвет авто",
-      name: "equipmentColor",
+      name: "machineColor",
       required: true,
       message: "Введите ГРН спецтехники",
       child: (
         <Input
-          onChange={(e) => form.setFieldValue("equipmentColor", e.target.value)}
+          onChange={(e) => form.setFieldValue("machineColor", e.target.value)}
         />
       ),
     },
     {
       label: "Номер телефона",
-      name: "phoneNumber",
+      name: "phone",
       required: true,
       message: "Введите номер телефона",
       child: (
         <Input
           type="tel"
-          onChange={(e) => form.setFieldValue("phoneNumber", e.target.value)}
+          onChange={(e) => form.setFieldValue("phone", e.target.value)}
         />
       ),
     },
@@ -237,17 +271,43 @@ const DriverCreatePage = () => {
         <Select
           showSearch
           allowClear
-          // loading={createLoading}
-          // disabled={createLoading}
+          loading={regionLoading}
+          disabled={regionLoading}
           filterOption={(inputValue, option: { label: string }) =>
             option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
           }
+          onChange={(e) => setSelectedRegion(e)}
           options={
             regions &&
             regions?.map((item) => {
               return {
-                // value: item.id,
-                value: item.name,
+                value: item.id,
+                label: item.name,
+              };
+            })
+          }
+        />
+      ),
+    },
+    {
+      label: "Район проживания",
+      name: "structureId",
+      required: true,
+      message: "Выберите регион",
+      child: (
+        <Select
+          showSearch
+          allowClear
+          loading={structureLoading}
+          disabled={structureLoading}
+          filterOption={(inputValue, option: { label: string }) =>
+            option?.label?.toLowerCase().indexOf(inputValue.toLowerCase()) >= 0
+          }
+          options={
+            districts &&
+            districts?.map((item) => {
+              return {
+                value: item.id,
                 label: item.name,
               };
             })
@@ -391,12 +451,22 @@ const DriverCreatePage = () => {
         </Row>
         <Row justify="end" gutter={[16, 16]}>
           <Col>
-            <Button onClick={handleFormCancel} danger>
+            <Button
+              onClick={handleFormCancel}
+              danger
+              loading={createLoading}
+              disabled={createLoading}
+            >
               Cancel
             </Button>
           </Col>
           <Col>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={createLoading}
+              disabled={createLoading}
+            >
               Submit
             </Button>
           </Col>

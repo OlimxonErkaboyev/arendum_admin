@@ -1,8 +1,12 @@
-import { Card, Col, Typography } from "antd";
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Card, Col, message, Typography } from "antd";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Space, Select } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { categories } from "../../../../constants";
+import useMachines from "../../../../hooks/machines/useMachines.jsx";
+import useSpecification from "../../../../hooks/specifications/useSpecification.jsx";
+import { useNavigate } from "react-router-dom";
+import { showErrors } from "../../../../errorHandler/errors.js";
 
 const { Option } = Select;
 
@@ -14,9 +18,28 @@ const { Option } = Select;
 
 const SpecificationsCreate: React.FC = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const { getMachines, machines, listLoading } = useMachines();
+  const { getList, create, createLoading } = useSpecification();
+
+  useEffect(() => {
+    getMachines();
+  }, []);
 
   const onFinish = (values: unknown) => {
-    console.log("Form values:", values);
+    create(values).then((res) => {
+      if (res.status === 201) {
+        getList({ limit: 10, page: 1 });
+        message.success({
+          content: "Успешно создано",
+        });
+        form.resetFields();
+        navigate(-1);
+      } else {
+        showErrors(res);
+        console.log(res);
+      }
+    });
   };
 
   return (
@@ -33,8 +56,20 @@ const SpecificationsCreate: React.FC = () => {
         <Form onFinish={onFinish} form={form} layout="vertical">
           <Space style={{ flexWrap: "wrap" }}>
             <Form.Item
-              label="Название параметра"
-              name="name"
+              label="Название параметра (RU)"
+              name="nameRu"
+              rules={[
+                { required: true, message: "Введите название параметра" },
+              ]}
+            >
+              <Input
+                style={{ width: "300px" }}
+                placeholder="Название параметра"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Название параметра (UZ)"
+              name="nameUz"
               rules={[
                 { required: true, message: "Введите название параметра" },
               ]}
@@ -46,7 +81,7 @@ const SpecificationsCreate: React.FC = () => {
             </Form.Item>
             <Form.Item
               label="Единицы измерения"
-              name="unit"
+              name="name"
               rules={[
                 { required: true, message: "Выберите единицу измерения" },
               ]}
@@ -56,17 +91,17 @@ const SpecificationsCreate: React.FC = () => {
                 placeholder="Единицы измерения"
                 allowClear
               >
-                <Option value="кг">кг</Option>
-                <Option value="т">т</Option>
-                <Option value="м">м</Option>
-                <Option value="км">км</Option>
-                <Option value="Эсть">Эсть</Option>
-                <Option value="Нет">Нет</Option>
+                <Option value="kg">кг</Option>
+                <Option value="t">т</Option>
+                <Option value="m">м</Option>
+                <Option value="km">км</Option>
+                <Option value="yes">Эсть</Option>
+                <Option value="no">Нет</Option>
               </Select>
             </Form.Item>
           </Space>
 
-          <Form.List name="parameters">
+          <Form.List name="params">
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name, ...restField }) => (
@@ -84,7 +119,7 @@ const SpecificationsCreate: React.FC = () => {
                     </Form.Item>
                     <Form.Item
                       {...restField}
-                      name={[name, "summa"]}
+                      name={[name, "amount"]}
                       rules={[{ required: true, message: "Введите сумма" }]}
                     >
                       <Input placeholder="Сумма" type="number" />
@@ -108,23 +143,53 @@ const SpecificationsCreate: React.FC = () => {
           <Form.Item
             label="Связать со следующими категориями"
             rules={[{ required: true, message: "Введите выберите категорию" }]}
-            name="category"
+            name="machineId"
           >
             <Select
+              showSearch
+              allowClear
               style={{ width: 200 }}
               placeholder="Выберите категорию"
-              allowClear
-            >
-              {categories.map((category) => (
-                <Option key={category} value={category}>
-                  {category}
-                </Option>
-              ))}
-            </Select>
+              loading={listLoading}
+              disabled={listLoading}
+              filterOption={(inputValue, option: { label: string }) =>
+                option?.label
+                  ?.toLowerCase()
+                  .indexOf(inputValue.toLowerCase()) >= 0
+              }
+              options={
+                machines &&
+                machines?.map((item) => {
+                  return {
+                    value: item.id,
+                    label: item.name,
+                  };
+                })
+              }
+            />
           </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
+          <Form.Item style={{ display: "flex", justifyContent: "end" }}>
+            <Button
+              type="primary"
+              htmlType="button"
+              style={{ marginRight: "10px" }}
+              loading={createLoading}
+              disabled={createLoading}
+              onClick={() => {
+                navigate(-1);
+                form.resetFields();
+              }}
+              danger
+            >
+              Cencel
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={createLoading}
+              disabled={createLoading}
+            >
               Сохранить
             </Button>
           </Form.Item>

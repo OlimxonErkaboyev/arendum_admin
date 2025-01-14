@@ -17,7 +17,7 @@ import { IMAGES } from "../../../../assets/images/images";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormOutlined } from "@ant-design/icons";
-import "./index.css";
+// import "./index.css";
 import { Button } from "antd";
 import useDrivers from "../../../../hooks/drivers/useDrivers";
 
