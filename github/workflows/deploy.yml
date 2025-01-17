@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: "22"
 
       # Bog'liqliklarni o'rnatish va build qilish
       - name: Install dependencies and build
@@ -31,5 +31,5 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no username@your_server_ip "rm -rf /var/www/arendumAdmin/*"
-          scp -r build/* username@your_server_ip:/var/www/arendumAdmin/
+          ssh -o StrictHostKeyChecking=no root@143.198.198.121 "rm -rf /var/www/arendumAdmin/*"
+          scp -r build/* root@143.198.198.121:/var/www/arendumAdmin/
