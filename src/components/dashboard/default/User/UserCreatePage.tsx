@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Form, Input, message, Modal, Select, TreeSelect } from "antd";
+import { Form, Input, Select, TreeSelect } from "antd";
 import { FC, useEffect, useState } from "react";
 import useUser from "../../../../hooks/user/useUser.jsx";
 import useRegion from "../../../../hooks/region/useRegion.jsx";
@@ -7,21 +7,13 @@ import { copyText } from "../../../../utils/index";
 import { CopyOutlined } from "@ant-design/icons";
 import { doctypeList } from "../../../list.js";
 import MainButton from "../../../MainButton/MainButton.js";
-import { showErrors } from "../../../../errorHandler/errors.js";
 import useAuth from "../../../../hooks/auth/useAuth.jsx";
 import { generatePassword } from "../../../../utils/index";
 
 const UserCreatePage: FC = () => {
   const [form] = Form.useForm();
-  const {
-    createLoading,
-    create,
-    getList,
-    roles,
-    getRoles,
-    getPermissions,
-    permissions,
-  } = useUser();
+  const { createLoading, roles, getRoles, getPermissions, permissions } =
+    useUser();
   const { regions, getRegions } = useRegion();
   const { user } = useAuth();
 
