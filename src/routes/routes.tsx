@@ -31,6 +31,7 @@ import SpecificationsCreate from "../components/dashboard/default/Specifications
 import Pricing from "../pages/dashboards/Pricing";
 import Client from "../pages/dashboards/Client";
 import PricingCreatePage from "../components/dashboard/default/Pricing/PricingCreatePage";
+import UserCreatePage from "../components/dashboard/default/User/UserCreatePage";
 
 export const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -111,6 +112,10 @@ const router = createBrowserRouter([
         element: <UserProfileDetailsPage />,
       },
       {
+        path: "user/create",
+        element: <UserCreatePage />,
+      },
+      {
         path: "merchants",
         element: <Merchants />,
       },
@@ -181,10 +186,6 @@ const router = createBrowserRouter([
       {
         path: "regional_management",
         element: <Report />,
-      },
-      {
-        path: "user/:id",
-        element: <UserProfileDetailsPage />,
       },
     ],
   },
