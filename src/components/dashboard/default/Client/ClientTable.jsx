@@ -22,12 +22,13 @@ import {
 import TableTitle from "../../../TableTitle/TableTitle";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { regions } from "../../../../constants/index";
 import useClient from "../../../../hooks/client/useClient";
+import useRegion from "../../../../hooks/region/useRegion";
+import { render } from "react-dom";
 
 const ClientTable = () => {
-  const { clients, getList, remove } = useClient();
-  // const { roles, getRoles } = useRoles();
+  const { clients, getList, remove, listLoading } = useClient();
+  const { regions, getRegions, listLoading: regionLoading } = useRegion();
   // const { user } = useAuth();
   console.log(clients);
   const [params, setParams] = useState({
@@ -51,7 +52,7 @@ const ClientTable = () => {
 
   useEffect(() => {
     getList(params);
-    // getRoles(params);
+    getRegions(params);
     // getStatus();
   }, [params]);
 
@@ -132,8 +133,8 @@ const ClientTable = () => {
               className="w-100"
               showSearch
               allowClear
-              // loading={listLoading}
-              // disabled={listLoading}
+              loading={regionLoading}
+              disabled={regionLoading}
               filterOption={(inputValue, option) =>
                 option?.label
                   ?.toUpperCase()
@@ -146,7 +147,7 @@ const ClientTable = () => {
                   label: region.name,
                 }))
               }
-              onChange={(value) => addFilter(setParams, "region", value)}
+              onChange={(value) => addFilter(setParams, "regionId", value)}
             />
           ),
           dataIndex: "region",
@@ -201,7 +202,12 @@ const ClientTable = () => {
               onChange={(value) => addFilter(setParams, "status", value)}
             />
           ),
-          dataIndex: "status",
+          // dataIndex: "status",
+          render: ({ status }) => (
+            <Tag key={status} color={setColorFromStatus(status)}>
+              {status.value}
+            </Tag>
+          ),
           key: "status",
         },
       ],
@@ -299,7 +305,7 @@ const ClientTable = () => {
             </Button>
           </TableTitle>
         )}
-        // loading={listLoading}
+        loading={listLoading}
         pagination={{
           onChange: (page, pageSize) => {
             const newParams = { ...params };

@@ -49,7 +49,7 @@ const RegionCreateModal: FC<RegionCreateModalProps> = ({
           const allValues = { ...values, name: "aaa" };
           create(allValues).then((res) => {
             console.log(res);
-            if (res.status === 1) {
+            if (res.success) {
               getRegions({ limit: 10, page: 1 });
               onSuccessFields && onSuccessFields();
               message.success({

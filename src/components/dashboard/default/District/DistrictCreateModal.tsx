@@ -19,7 +19,7 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
 
   const { createLoading, create, getStructure } = useStructure();
   const { regions, getRegions, listLoading } = useRegion();
-
+  console.log(regions);
   useEffect(() => {
     getRegions();
   }, []);
@@ -44,7 +44,7 @@ const DistrictCreateModal: FC<DistrictCreateModalProps> = ({
             regions?.map((item) => {
               return {
                 value: item.id,
-                label: item.nameRu,
+                label: item.name,
               };
             })
           }

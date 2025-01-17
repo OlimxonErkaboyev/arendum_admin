@@ -550,7 +550,7 @@ export const setIconFromStatus = (int) => {
 export const setColorFromStatus = (int) => {
   let color = "";
   switch (int) {
-    case "active":
+    case "2":
       color = "success";
       break;
     case "pending":

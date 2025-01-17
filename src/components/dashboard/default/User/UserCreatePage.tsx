@@ -1,27 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Form, Input, message, Modal, Select, TreeSelect } from "antd";
 import { FC, useEffect, useState } from "react";
-import useUser from "../../../../hooks/user/useUser";
+import useUser from "../../../../hooks/user/useUser.jsx";
 import useRegion from "../../../../hooks/region/useRegion.jsx";
 import { copyText } from "../../../../utils/index";
 import { CopyOutlined } from "@ant-design/icons";
-import { doctypeList } from "../../../list";
+import { doctypeList } from "../../../list.js";
 import MainButton from "../../../MainButton/MainButton.js";
 import { showErrors } from "../../../../errorHandler/errors.js";
 import useAuth from "../../../../hooks/auth/useAuth.jsx";
-import { generatePassword } from "./../../../../utils/index";
+import { generatePassword } from "../../../../utils/index";
 
-interface UserCreateModalProps {
-  open: boolean;
-  onSuccessFields?: () => void;
-  onCancel?: () => void;
-}
-
-const UserCreateModal: FC<UserCreateModalProps> = ({
-  open,
-  onCancel,
-  onSuccessFields,
-}) => {
+const UserCreatePage: FC = () => {
   const [form] = Form.useForm();
   const {
     createLoading,
@@ -40,7 +30,7 @@ const UserCreateModal: FC<UserCreateModalProps> = ({
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [value, setValue] = useState<string>();
-  console.log(selectedRegion)
+  console.log(selectedRegion);
 
   useEffect(() => {
     getRegions();
@@ -327,50 +317,19 @@ const UserCreateModal: FC<UserCreateModalProps> = ({
   ];
 
   return (
-    <Modal
-      title="Создать пользователь"
-      open={open}
-      onOk={() => {
-        form.validateFields().then(() => {
-          const values = form.getFieldsValue();
-          create(values).then((res) => {
-            console.log(res);
-            if (res?.status === 200) {
-              getList({ pageNumber: 1, pageSize: 20 });
-              onSuccessFields && onSuccessFields();
-              message.success({
-                content: res?.data?.answereComment,
-              });
-              form.resetFields();
-              setPassword("");
-              setLogin("");
-              setSelectedRegion(null);
-            } else {
-              showErrors(res);
-            }
-          });
-        });
-      }}
-      okText="Сохранить"
-      okButtonProps={{ loading: createLoading, disabled: createLoading }}
-      cancelText="Закрыть"
-      onCancel={onCancel}
-      centered
-    >
-      <Form form={form} layout="vertical">
-        {forms.map((item, index) => (
-          <Form.Item
-            key={index}
-            label={item.label}
-            name={item.name}
-            rules={[{ required: item.required, message: item.message }]}
-          >
-            {item.child}
-          </Form.Item>
-        ))}
-      </Form>
-    </Modal>
+    <Form form={form} layout="vertical">
+      {forms.map((item, index) => (
+        <Form.Item
+          key={index}
+          label={item.label}
+          name={item.name}
+          rules={[{ required: item.required, message: item.message }]}
+        >
+          {item.child}
+        </Form.Item>
+      ))}
+    </Form>
   );
 };
 
-export default UserCreateModal;
+export default UserCreatePage;
